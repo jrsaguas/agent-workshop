@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Workshop MCP Server",
+  "type": "object",
+  "required": ["id", "name", "transport"],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string"},
+    "transport": {"type": "string", "enum": ["stdio", "sse", "streamable-http"]},
+    "command": {"type": "string"},
+    "args": {"type": "array", "items": {"type": "string"}},
+    "url": {"type": "string"},
+    "env": {"type": "object", "additionalProperties": {"type": "string"}},
+    "tools": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

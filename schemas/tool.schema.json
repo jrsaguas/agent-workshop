@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Workshop Tool",
+  "type": "object",
+  "required": ["id", "name", "kind"],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string"},
+    "kind": {"type": "string", "enum": ["builtin", "command", "api", "runtime", "mcp"]},
+    "description": {"type": "string"},
+    "capabilities": {"type": "array", "items": {"type": "string"}},
+    "input_schema": {"type": "object"},
+    "permission": {"type": "string"}
+  },
+  "additionalProperties": true
+}

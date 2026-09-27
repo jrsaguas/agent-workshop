@@ -1,0 +1,7 @@
+tool:
+  id: python
+  name: Python
+  kind: builtin
+  description: Ejecuta tareas Python controladas por el runtime.
+  capabilities: [coding, computation, testing]
+  permission: runtime.execute

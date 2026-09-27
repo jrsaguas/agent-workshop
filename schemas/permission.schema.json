@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Workshop Permission Policy",
+  "type": "object",
+  "required": ["default", "rules"],
+  "properties": {
+    "default": {"type": "string", "enum": ["deny", "allow"]},
+    "rules": {"type": "array", "items": {"type": "object", "required": ["operation", "effect"], "properties": {"operation": {"type": "string"}, "resource": {"type": "string"}, "effect": {"type": "string", "enum": ["deny", "allow"]}}}}
+  },
+  "additionalProperties": false
+}

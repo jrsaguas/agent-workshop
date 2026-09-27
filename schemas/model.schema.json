@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Workshop Model",
+  "type": "object",
+  "required": ["id", "name", "provider", "model"],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string"},
+    "provider": {"type": "string"},
+    "model": {"type": "string"},
+    "kind": {"type": "string", "enum": ["chat", "reasoning", "embedding", "multimodal"]},
+    "capabilities": {"type": "array", "items": {"type": "string"}},
+    "context_window": {"type": "integer", "minimum": 1},
+    "config": {"type": "object"}
+  },
+  "additionalProperties": true
+}

@@ -1,17 +1,33 @@
-# Estado inicial
+# Estado del proyecto
 
-- [x] Estructura local creada.
-- [x] Especificación inicial creada.
-- [x] Arquitectura inicial creada.
-- [x] Roadmap creado.
-- [x] Plan de desarrollo paralelo creado.
-- [x] Modelo de seguridad inicial creado.
-- [x] Schema inicial creado.
-- [ ] Repositorio GitHub creado.
-- [ ] Git inicializado y primer commit.
-- [ ] CI inicial.
-- [ ] Agent Registry funcional.
-- [ ] Runtime mínimo.
+## Implementado
+- [x] Estructura local y documentación base.
+- [x] Repositorio GitHub y rama main sincronizada.
+- [x] AgentDefinition + schema JSON.
+- [x] Agent Registry filesystem-backed.
+- [x] CLI inicial para listar agentes.
+- [x] CI inicial con Python 3.11/3.12.
+- [x] ModelDefinition + schema + Model Registry.
+- [x] ToolDefinition + schema + Tool Registry.
+- [x] MCPServerDefinition + schema + MCP Registry.
+- [x] Ejemplos YAML para Ollama, Python, filesystem y GitHub MCP.
+- [x] Pruebas automatizadas de los tres registros.
+- [x] CLI para listar models/tools/mcp.
 
-## Próximo bloque
-Validar nombre/repositorio y después crear la base técnica del Agent Registry + CLI + tests.
+## Verificado
+- [x] Suite local: 3 tests pasando.
+- [x] Working tree inspeccionado antes de cambios.
+- [x] main estaba sincronizada con origin/main antes de este bloque.
+
+## Pendiente
+- [ ] Permission Policy engine y validación deny-by-default.
+- [ ] Model provider adapters y ejecución real de inferencia.
+- [ ] Tool execution contract.
+- [ ] MCP discovery/connection runtime.
+- [ ] Runtime mínimo de ejecución de agentes.
+- [ ] Human approval y audit log.
+- [ ] Agent-as-tool y Agent Graph.
+- [ ] GUI/Studio.
+
+## Próximo bloque técnico
+Conectar AgentDefinition con los registros mediante referencias estables (model, tools, mcp) y añadir el primer contrato de ejecución, manteniendo separadas capacidades, permisos y transporte MCP.

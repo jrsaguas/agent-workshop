@@ -1,0 +1,7 @@
+mcp:
+  id: github
+  name: GitHub MCP
+  transport: stdio
+  command: github-mcp-server
+  args: []
+  tools: [github]
