@@ -1,0 +1,22 @@
+{
+  "title": "Agent Forge AgentDefinition",
+  "type": "object",
+  "required": ["id", "name", "version", "model", "instructions"],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string"},
+    "version": {"type": "string"},
+    "description": {"type": "string"},
+    "model": {"type": "object"},
+    "instructions": {"type": "string"},
+    "capabilities": {"type": "object"},
+    "tools": {"type": "array"},
+    "mcp": {"type": "array"},
+    "skills": {"type": "array"},
+    "memory": {"type": "object"},
+    "permissions": {"type": "object"},
+    "runtime": {"type": "object"},
+    "subagents": {"type": "array"},
+    "evaluation": {"type": "object"}
+  }
+}

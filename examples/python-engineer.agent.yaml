@@ -1,0 +1,32 @@
+agent:
+  id: python-engineer
+  name: Python Engineer
+  version: 0.1.0
+  description: Agente especializado en desarrollo y pruebas Python.
+model:
+  provider: ollama
+  model: qwen3:8b
+instructions: |
+  Desarrolla soluciones Python reproducibles y verificables.
+capabilities:
+  coding: true
+  planning: true
+  testing: true
+  terminal: true
+tools:
+  - python
+  - filesystem
+  - git
+mcp: []
+skills:
+  - python-development
+memory:
+  provider: local
+permissions:
+  filesystem: []
+  terminal: []
+runtime:
+  type: pc
+subagents: []
+evaluation:
+  enabled: true
