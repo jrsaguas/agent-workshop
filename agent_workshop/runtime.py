@@ -1,12 +1,14 @@
-from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
 from .execution import Execution
+from .execution_store import ExecutionStore
 from .permissions import PermissionPolicy
-from .registry import AgentRegistry
-from .resource_registries import ModelRegistry, ToolRegistry, MCPRegistry
 from .providers import ProviderRegistry
+from .registry import AgentRegistry
+from .resource_registries import MCPRegistry, ModelRegistry, ToolRegistry
+
 
 @dataclass
 class ResolvedAgent:
@@ -16,9 +18,11 @@ class ResolvedAgent:
     mcp: list[Any]
     permissions: PermissionPolicy
 
+
 class AgentResolver:
-    def __init__(self, root: Path = Path(".")):
+    def __init__(self, root: Path = Path(".")) -> None:
         self.root = root
+
     def resolve(self, agent_id: str) -> ResolvedAgent:
         definition = AgentRegistry(self.root / "agents").get(agent_id)
         if definition is None:
@@ -41,10 +45,16 @@ class AgentResolver:
             mcps.append(server)
         return ResolvedAgent(definition, model, tools, mcps, PermissionPolicy(definition.permissions))
 
+
 class AgentRuntime:
-    def __init__(self, root: Path = Path("."), providers: ProviderRegistry | None = None):
+    def __init__(self, root: Path = Path("."), providers: ProviderRegistry | None = None, execution_store: ExecutionStore | None = None):
+        self.root = root
         self.resolver = AgentResolver(root)
         self.providers = providers or ProviderRegistry()
+        self.execution_store = execution_store or ExecutionStore(root / "executions")
+
+    def _persist(self, execution: Execution) -> None:
+        self.execution_store.save(execution)
 
     def prepare(self, agent_id: str) -> Execution:
         resolved = self.resolver.resolve(agent_id)
@@ -52,24 +62,29 @@ class AgentRuntime:
         execution.start()
         execution.record("agent.resolved", model=resolved.model.id, tools=[t.id for t in resolved.tools], mcp=[m.id for m in resolved.mcp])
         execution.record("permissions.loaded", default=resolved.permissions.default)
+        self._persist(execution)
         return execution
 
     def authorize(self, execution: Execution, agent_id: str, operation: str, resource: str = "*") -> bool:
         resolved = self.resolver.resolve(agent_id)
         allowed = resolved.permissions.allows(operation, resource)
         execution.record("permission.checked", operation=operation, resource=resource, allowed=allowed)
+        self._persist(execution)
         return allowed
 
     def generate(self, agent_id: str, prompt: str, **options: Any) -> tuple[Execution, str]:
         resolved = self.resolver.resolve(agent_id)
         execution = self.prepare(agent_id)
         execution.record("model.requested", provider=resolved.model.provider, model=resolved.model.model)
+        self._persist(execution)
         try:
             provider = self.providers.get(resolved.model.provider)
             response = provider.generate(resolved.model.model, prompt, **options)
             execution.record("model.completed")
             execution.complete()
+            self._persist(execution)
             return execution, response
         except Exception as exc:
             execution.fail(str(exc))
+            self._persist(execution)
             raise
