@@ -1,0 +1,7 @@
+tool:
+  id: git
+  name: Git
+  kind: command
+  description: Operaciones Git mediante el runtime autorizado.
+  capabilities: [version_control]
+  permission: git.write

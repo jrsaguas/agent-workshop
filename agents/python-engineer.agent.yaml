@@ -24,8 +24,7 @@ agent:
   memory:
     provider: local
   permissions:
-    filesystem: []
-    terminal: []
+    default: deny
   runtime:
     type: pc
   subagents: []
