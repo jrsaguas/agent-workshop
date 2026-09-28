@@ -1,13 +1,16 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Any, Callable
+
+from .execution import Execution
+from .permissions import PermissionPolicy
+from .resource_models import ToolDefinition
 
 
 class ToolInputError(ValueError):
     pass
-from .execution import Execution
-from .permissions import PermissionPolicy
-from .resource_models import ToolDefinition
+
 
 @dataclass
 class ToolResult:
@@ -15,6 +18,7 @@ class ToolResult:
     success: bool
     output: Any = None
     error: str | None = None
+
 
 class ToolExecutor:
     def __init__(self, handlers: dict[str, Callable[..., Any]] | None = None):
@@ -35,8 +39,9 @@ class ToolExecutor:
                 execution.record("tool.invalid_input", tool=tool.id, error=error)
                 return ToolResult(tool.id, False, error=error)
         resource = str(arguments.get("resource", "*"))
-        allowed = policy.allows(tool.permission or f"tool.{tool.id}", resource)
-        execution.record("tool.authorization", tool=tool.id, operation=tool.permission or f"tool.{tool.id}", resource=resource, allowed=allowed)
+        operation = tool.permission or f"tool.{tool.id}"
+        allowed = policy.allows(operation, resource)
+        execution.record("tool.authorization", tool=tool.id, operation=operation, resource=resource, allowed=allowed)
         if not allowed:
             return ToolResult(tool.id, False, error="permission denied")
         handler = self.handlers.get(tool.id)

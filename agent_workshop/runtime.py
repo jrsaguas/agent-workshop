@@ -4,6 +4,9 @@ from typing import Any
 
 from .execution import Execution
 from .execution_store import ExecutionStore
+from .builtin_tools import filesystem_handlers
+from .process_tools import process_tool_handlers
+from .tool_executor import ToolExecutor
 from .permissions import PermissionPolicy
 from .providers import ProviderRegistry
 from .registry import AgentRegistry
@@ -52,6 +55,10 @@ class AgentRuntime:
         self.resolver = AgentResolver(root)
         self.providers = providers or ProviderRegistry()
         self.execution_store = execution_store or ExecutionStore(root / "executions")
+        handlers = {}
+        handlers.update(filesystem_handlers(root))
+        handlers.update(process_tool_handlers(root))
+        self.tool_executor = ToolExecutor(handlers)
 
     def _persist(self, execution: Execution) -> None:
         self.execution_store.save(execution)

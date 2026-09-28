@@ -18,3 +18,11 @@ def test_tool_executor_runs_authorized_handler():
     assert result.success is True
     assert result.output == 42
     assert execution.events[-1].type == "tool.completed"
+
+
+def test_runtime_wires_builtin_handlers(tmp_path):
+    from agent_workshop.runtime import AgentRuntime
+    runtime = AgentRuntime(tmp_path)
+    assert "filesystem.read" in runtime.tool_executor.handlers
+    assert "python" in runtime.tool_executor.handlers
+    assert "git" in runtime.tool_executor.handlers
