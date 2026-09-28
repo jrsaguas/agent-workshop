@@ -2,6 +2,6 @@ tool:
   id: filesystem
   name: Filesystem
   kind: runtime
-  description: Lectura y escritura de archivos mediante el runtime autorizado.
+  description: Familia de operaciones de filesystem dentro del workspace autorizado.
   capabilities: [files]
-  permission: filesystem.write
+  permission: filesystem.read
