@@ -2,6 +2,15 @@ tool:
   id: git
   name: Git
   kind: command
-  description: Operaciones Git mediante el runtime autorizado.
-  capabilities: [version_control]
-  permission: git.write
+  description: Operaciones Git de lectura mediante el runtime autorizado.
+  capabilities: [version_control.read]
+  input_schema:
+    type: object
+    required: [operation]
+    properties:
+      operation:
+        type: string
+        enum: [status, diff, log, branches]
+      timeout: {type: number, default: 10}
+    additionalProperties: false
+  permission: git.read

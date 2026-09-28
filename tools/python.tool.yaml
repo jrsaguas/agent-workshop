@@ -2,6 +2,14 @@ tool:
   id: python
   name: Python
   kind: builtin
-  description: Ejecuta tareas Python controladas por el runtime.
+  description: Ejecuta archivos Python dentro del workspace autorizado con timeout.
   capabilities: [coding, computation, testing]
+  input_schema:
+    type: object
+    required: [path]
+    properties:
+      path: {type: string}
+      timeout: {type: number, default: 10}
+      args: {type: array, items: {type: string}, default: []}
+    additionalProperties: false
   permission: runtime.execute
