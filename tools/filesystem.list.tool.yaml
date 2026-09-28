@@ -1,0 +1,13 @@
+﻿tool:
+  id: filesystem.list
+  name: Filesystem List
+  kind: runtime
+  description: Lista archivos y directorios dentro del workspace autorizado.
+  capabilities: [files.list]
+  input_schema:
+    type: object
+    required: []
+    properties:
+      path: {type: string}
+    additionalProperties: false
+  permission: filesystem.list

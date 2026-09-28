@@ -1,0 +1,14 @@
+tool:
+  id: filesystem.write
+  name: Filesystem Write
+  kind: runtime
+  description: Escribe texto UTF-8 dentro del workspace autorizado.
+  capabilities: [files.write]
+  input_schema:
+    type: object
+    required: [path, content]
+    properties:
+      path: {type: string}
+      content: {type: string}
+    additionalProperties: false
+  permission: filesystem.write

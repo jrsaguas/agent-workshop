@@ -1,0 +1,13 @@
+﻿tool:
+  id: filesystem.delete
+  name: Filesystem Delete
+  kind: runtime
+  description: Elimina un archivo dentro del workspace autorizado.
+  capabilities: [files.delete]
+  input_schema:
+    type: object
+    required: [path]
+    properties:
+      path: {type: string}
+    additionalProperties: false
+  permission: filesystem.delete

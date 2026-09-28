@@ -1,0 +1,13 @@
+﻿tool:
+  id: filesystem.read
+  name: Filesystem Read
+  kind: runtime
+  description: Lee texto UTF-8 dentro del workspace autorizado.
+  capabilities: [files.read]
+  input_schema:
+    type: object
+    required: [path]
+    properties:
+      path: {type: string}
+    additionalProperties: false
+  permission: filesystem.read
