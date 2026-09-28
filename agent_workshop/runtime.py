@@ -6,6 +6,7 @@ from .execution import Execution
 from .permissions import PermissionPolicy
 from .registry import AgentRegistry
 from .resource_registries import ModelRegistry, ToolRegistry, MCPRegistry
+from .providers import ProviderRegistry
 
 @dataclass
 class ResolvedAgent:
@@ -41,8 +42,9 @@ class AgentResolver:
         return ResolvedAgent(definition, model, tools, mcps, PermissionPolicy(definition.permissions))
 
 class AgentRuntime:
-    def __init__(self, root: Path = Path(".")):
+    def __init__(self, root: Path = Path("."), providers: ProviderRegistry | None = None):
         self.resolver = AgentResolver(root)
+        self.providers = providers or ProviderRegistry()
 
     def prepare(self, agent_id: str) -> Execution:
         resolved = self.resolver.resolve(agent_id)
@@ -57,3 +59,17 @@ class AgentRuntime:
         allowed = resolved.permissions.allows(operation, resource)
         execution.record("permission.checked", operation=operation, resource=resource, allowed=allowed)
         return allowed
+
+    def generate(self, agent_id: str, prompt: str, **options: Any) -> tuple[Execution, str]:
+        resolved = self.resolver.resolve(agent_id)
+        execution = self.prepare(agent_id)
+        execution.record("model.requested", provider=resolved.model.provider, model=resolved.model.model)
+        try:
+            provider = self.providers.get(resolved.model.provider)
+            response = provider.generate(resolved.model.model, prompt, **options)
+            execution.record("model.completed")
+            execution.complete()
+            return execution, response
+        except Exception as exc:
+            execution.fail(str(exc))
+            raise

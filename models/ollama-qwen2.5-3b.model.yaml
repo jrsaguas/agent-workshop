@@ -1,0 +1,8 @@
+model:
+  id: ollama-qwen2.5-3b
+  name: Qwen2.5 3B (Ollama)
+  provider: ollama
+  model: qwen2.5:3b
+  kind: chat
+  capabilities: [chat, reasoning, tools]
+  config: {}

@@ -1,0 +1,8 @@
+model:
+  id: ollama-deepseek-r1-1.5b
+  name: DeepSeek R1 1.5B (Ollama)
+  provider: ollama
+  model: deepseek-r1:1.5b
+  kind: reasoning
+  capabilities: [chat, reasoning]
+  config: {}

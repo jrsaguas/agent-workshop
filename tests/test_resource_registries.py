@@ -6,8 +6,9 @@ def test_resource_registries_load_examples():
     models = ModelRegistry(root / "models").list()
     tools = ToolRegistry(root / "tools").list()
     mcps = MCPRegistry(root / "mcp").list()
-    assert models[0].provider == "ollama"
-    assert models[0].model == "qwen3:8b"
+    qwen = next(model for model in models if model.id == "ollama-qwen3-8b")
+    assert qwen.provider == "ollama"
+    assert qwen.model == "qwen3:8b"
     assert {tool.id for tool in tools} == {"filesystem", "python", "git"}
     assert mcps[0].transport == "stdio"
 
