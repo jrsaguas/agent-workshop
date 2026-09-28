@@ -1,6 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable
+
+
+class ToolInputError(ValueError):
+    pass
 from .execution import Execution
 from .permissions import PermissionPolicy
 from .resource_models import ToolDefinition
@@ -17,6 +21,19 @@ class ToolExecutor:
         self.handlers = handlers or {}
 
     def execute(self, tool: ToolDefinition, execution: Execution, policy: PermissionPolicy, **arguments: Any) -> ToolResult:
+        required = tool.input_schema.get("required", [])
+        missing = [name for name in required if name not in arguments]
+        if missing:
+            error = f"missing required arguments: {', '.join(missing)}"
+            execution.record("tool.invalid_input", tool=tool.id, error=error)
+            return ToolResult(tool.id, False, error=error)
+        properties = tool.input_schema.get("properties", {})
+        if tool.input_schema.get("additionalProperties") is False:
+            unknown = sorted(set(arguments) - set(properties))
+            if unknown:
+                error = f"unknown arguments: {', '.join(unknown)}"
+                execution.record("tool.invalid_input", tool=tool.id, error=error)
+                return ToolResult(tool.id, False, error=error)
         resource = str(arguments.get("resource", "*"))
         allowed = policy.allows(tool.permission or f"tool.{tool.id}", resource)
         execution.record("tool.authorization", tool=tool.id, operation=tool.permission or f"tool.{tool.id}", resource=resource, allowed=allowed)
